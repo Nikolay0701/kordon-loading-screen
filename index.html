@@ -5,50 +5,37 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Anomaly Zone - Кордон</title>
   <style>
-    @font-face {
-      font-family: 'StalkerAlt';
-      src: url('https://fonts.cdnfonts.com/s/102047/Road_Rage.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       background: #000;
       overflow: hidden;
     }
 
     /* Фоны */
-    #bg { position: fixed; inset: 0; z-index: 0; }
+    #bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
     #bg div {
-      position: absolute; inset: 0;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-repeat: no-repeat;
       background-size: cover;
-      background-position: center;
+      background-position: center center;
       opacity: 0;
+      -webkit-transition: opacity 2s ease-in-out;
       transition: opacity 2s ease-in-out;
     }
     #bg div.active { opacity: 1; }
 
     .metal-frame {
-      position: fixed;
-      inset: 0;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
       z-index: 4;
-      box-shadow: inset 0 0 8vh rgba(0,0,0,0.4);
-    }
-
-    .grain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 5;
-      mix-blend-mode: overlay;
+      box-shadow: inset 0 0 80px rgba(0,0,0,0.5);
     }
 
     .hud-scan {
-      position: fixed;
-      inset: 0;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 3;
       pointer-events: none;
       background-image: linear-gradient(transparent 30%, rgba(0,0,0,0.02) 31%);
@@ -58,27 +45,24 @@
 
     .tips {
       position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 4vh;
+      left: 5%;
+      width: 90%;
+      bottom: 4%;
       z-index: 6;
-      width: 90vw;
       color: #ffdb99;
-      font-family: Inter, monospace, sans-serif;
-      font-size: clamp(12px, 1.1vw, 22px);
+      font-family: Inter, Consolas, monospace, sans-serif;
+      font-size: 16px;
       text-align: center;
     }
-
     .tips h3 {
-      margin: 0 0 0.5vh 0;
+      margin: 0 0 6px 0;
       color: #ffb84d;
-      font-family: monospace, sans-serif;
-      font-size: clamp(12px, 1.1vw, 22px);
+      font-size: 16px;
     }
+    #tipText { font-size: 16px; }
 
-    .tips #tipText {
-      margin-top: 0.5vh;
-      font-size: clamp(12px, 1.1vw, 22px);
+    @media (min-width: 1600px) {
+      .tips, .tips h3, #tipText { font-size: 20px; }
     }
   </style>
 </head>
@@ -91,7 +75,6 @@
   </div>
 
   <div class="metal-frame"></div>
-  <div class="grain"></div>
   <div class="hud-scan"></div>
 
   <div class="tips">
@@ -101,16 +84,16 @@
 
   <script>
     // Смена фонов
-    const slides = document.querySelectorAll('#bg div');
-    let cur = 0;
-    setInterval(() => {
-      slides[cur].classList.remove('active');
+    var slides = document.querySelectorAll('#bg div');
+    var cur = 0;
+    setInterval(function () {
+      slides[cur].className = '';
       cur = (cur + 1) % slides.length;
-      slides[cur].classList.add('active');
-    }, 8000); // 8 секунд
+      slides[cur].className = 'active';
+    }, 8000);
 
     // Советы
-    const tips = [
+    var tips = [
       'В Зоне нет случайностей — если нашёл артефакт слишком легко, значит, рядом что-то тебя уже ждёт.',
       'Патроны — это валюта. Береги их, торгуй ими, но никогда не оставайся без пары магазинов в запасе.',
       'Аномалия «Воронка» тянет вниз быстрее, чем успеешь выругаться. Болт в помощь — кидай, пока жив.',
@@ -123,8 +106,8 @@
       'Зона не любит глупых — будь хитрым, будь живым.'
     ];
 
-    let tipIndex = 0;
-    const tipText = document.getElementById('tipText');
+    var tipIndex = 0;
+    var tipText = document.getElementById('tipText');
 
     function showTip() {
       tipText.textContent = tips[tipIndex];
